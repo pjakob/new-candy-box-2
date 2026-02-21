@@ -30,6 +30,9 @@ namespace KawaiiCandyBox.Core
 
         // ── Settings ─────────────────────────────────────────────────
         public string languageCode = "";        // empty = auto-detect from device
+        // ── Inventory (early game) ───────────────────────────────────
+public int chocolateBarCount = 0;
+public long totalCandiesThrown = 0;  // tracks throw animation progress
     }
 
     /// <summary>

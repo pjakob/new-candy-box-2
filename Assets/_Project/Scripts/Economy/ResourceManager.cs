@@ -33,6 +33,10 @@ namespace KawaiiCandyBox.Economy
         private long _pendingOfflineCandy = 0;
 
         // ── Events ───────────────────────────────────────────────────
+public static event System.Action<long, bool> OnCandyThrown;
+// Parameters: totalCandiesThrown, justEarnedChocolateBar
+
+public static event System.Action OnChocolateBarEarned;
 
         // Fired whenever candy count changes — UI subscribes to this
         public static event System.Action<long> OnCandyChanged;
@@ -170,17 +174,37 @@ namespace KawaiiCandyBox.Economy
         /// Throws 10 candies on the ground (spends them with no return).
         /// Returns false if the player doesn't have enough.
         /// </summary>
-        public bool ThrowCandy(long amount = 10)
-        {
-            if (!TrySpendCandy(amount))
-            {
-                Debug.Log("[ResourceManager] Not enough candy to throw.");
-                return false;
-            }
+        private const long ChocolateBarThreshold = 1630;
 
-            Debug.Log($"[ResourceManager] Threw {amount} candy on the ground.");
-            return true;
-        }
+public bool ThrowCandy(long amount = 10)
+{
+    if (!TrySpendCandy(amount))
+    {
+        Debug.Log("[ResourceManager] Not enough candy to throw.");
+        return false;
+    }
+
+    Core.SaveManager.Instance.Data.totalCandiesThrown += amount;
+    long totalThrown = Core.SaveManager.Instance.Data.totalCandiesThrown;
+
+    // Check if this throw crossed the chocolate bar threshold
+    bool justEarnedChocolate =
+        totalThrown >= ChocolateBarThreshold &&
+        totalThrown - amount < ChocolateBarThreshold;
+
+    if (justEarnedChocolate)
+    {
+        Core.SaveManager.Instance.Data.chocolateBarCount++;
+        Debug.Log("[ResourceManager] Chocolate bar earned!");
+        OnChocolateBarEarned?.Invoke();
+    }
+
+    Debug.Log($"[ResourceManager] Threw {amount} candy. " +
+              $"Total thrown: {totalThrown}.");
+
+    OnCandyThrown?.Invoke(totalThrown, justEarnedChocolate);
+    return true;
+}
 
         // ── Public lollipop API ──────────────────────────────────────
 

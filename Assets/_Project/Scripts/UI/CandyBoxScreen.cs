@@ -28,6 +28,9 @@ namespace KawaiiCandyBox.UI
     {
         [Header("Candy Counter")]
         [SerializeField] private TextMeshProUGUI _candyCounterLabel;
+        [Header("Messages")]
+        [SerializeField] private TextMeshProUGUI _candiesEatenLabel;
+        [SerializeField] private TextMeshProUGUI _candiesThrownLabel;
 
         [Header("Buttons")]
         [SerializeField] private Button _eatAllButton;
@@ -48,6 +51,8 @@ namespace KawaiiCandyBox.UI
             ResourceManager.OnCandyChanged += UpdateCandyDisplay;
             GameManager.OnDeveloperRequestGranted += OnRequestGranted;
             GameManager.OnGameReady += OnGameReady;
+            ResourceManager.OnCandyThrown += OnCandyThrown;
+            ResourceManager.OnChocolateBarEarned += OnChocolateBarEarned;
         }
 
         private void OnDisable()
@@ -55,23 +60,66 @@ namespace KawaiiCandyBox.UI
             ResourceManager.OnCandyChanged -= UpdateCandyDisplay;
             GameManager.OnDeveloperRequestGranted -= OnRequestGranted;
             GameManager.OnGameReady -= OnGameReady;
+            ResourceManager.OnCandyThrown -= OnCandyThrown;
+            ResourceManager.OnChocolateBarEarned -= OnChocolateBarEarned;
         }
 
         private void Start()
-        {
-            // Set all button labels from localisation
-            SetButtonLabels();
+{
+    SetButtonLabels();
+    RefreshButtonVisibility();
+    UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
+    RefreshPersistentLabels();  // ← add this
+}
 
-            // Set initial button visibility based on current
-            // progression state (important for returning players)
-            RefreshButtonVisibility();
+private void RefreshPersistentLabels()
+{
+    var loc = Localisation.LocalizationManager.Instance;
+    long totalEaten = ResourceManager.Instance.CandyEatenTotal;
+    long totalThrown = Core.SaveManager.Instance.Data.totalCandiesThrown;
 
-            // Set initial candy display
-            UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
-        }
+    if (_candiesEatenLabel != null)
+    {
+        bool hasEaten = totalEaten > 0;
+        _candiesEatenLabel.gameObject.SetActive(hasEaten);
+        if (hasEaten)
+            _candiesEatenLabel.text = loc.Get("ui.eat.message")
+                .Replace("{0}", totalEaten.ToString());
+    }
+
+    if (_candiesThrownLabel != null)
+    {
+        bool hasThrown = totalThrown > 0;
+        _candiesThrownLabel.gameObject.SetActive(hasThrown);
+        if (hasThrown)
+            _candiesThrownLabel.text = loc.Get("ui.throw.message")
+                .Replace("{0}", totalThrown.ToString());
+    }
+}
 
         // ── Event handlers ───────────────────────────────────────────
+private void OnCandyThrown(long totalThrown, bool earnedChocolate)
+{
+    if (_candiesThrownLabel == null) return;
 
+    _candiesThrownLabel.gameObject.SetActive(true);
+    _candiesThrownLabel.text = Localisation.LocalizationManager.Instance
+        .Get("ui.throw.message")
+        .Replace("{0}", totalThrown.ToString());
+
+    if (earnedChocolate)
+    {
+        // TODO: Show chocolate bar notification separately
+        // For now just append to the thrown label
+        _candiesThrownLabel.text += "\n" + Localisation.LocalizationManager.Instance
+            .Get("ui.throw.chocolate_bar_earned");
+    }
+}
+
+private void OnChocolateBarEarned()
+{
+    // Handled inside OnCandyThrown above
+}
         private void OnGameReady()
         {
             RefreshButtonVisibility();
@@ -176,9 +224,18 @@ private void RefreshButtonVisibility()
         /// Called by the Eat All button's OnClick event.
         /// </summary>
         public void OnEatAllPressed()
-        {
-            ResourceManager.Instance.EatAllCandy();
-        }
+{
+    long candyCount = ResourceManager.Instance.CandyCount;
+    ResourceManager.Instance.EatAllCandy();
+
+    if (_candiesEatenLabel != null && candyCount > 0)
+    {
+        _candiesEatenLabel.gameObject.SetActive(true);
+        _candiesEatenLabel.text = Localisation.LocalizationManager.Instance
+            .Get("ui.eat.message")
+            .Replace("{0}", ResourceManager.Instance.CandyEatenTotal.ToString());
+    }
+}
 
         /// <summary>
         /// Called by the Throw Candy button's OnClick event.

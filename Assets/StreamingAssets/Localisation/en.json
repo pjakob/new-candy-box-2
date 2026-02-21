@@ -19,6 +19,9 @@
         { "key": "offline.cap_reached", "value": "Your candy jar was full! Come back sooner next time 🍬" },
         { "key": "offline.collect_button", "value": "Collect!" },
         { "key": "settings.language_label", "value": "Language" },
+        { "key": "ui.eat.message", "value": "You have eaten {0} candies so far." },
+        { "key": "ui.throw.message", "value": "You have thrown {0} candies on the ground so far." },
+        { "key": "ui.throw.chocolate_bar_earned", "value": "You threw enough candies to find a chocolate bar! 🍫" },
         { "key": "settings.save_label", "value": "Save Game" }
     ]
 }
