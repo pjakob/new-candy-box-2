@@ -104,11 +104,13 @@ namespace KawaiiCandyBox.Core
     // 2. Restore our local state from save data
     _developerRequestCount = SaveManager.Instance.Data.developerRequestCount;
 
-    // 3. Load the correct language (uses saved preference,
-    //    or auto-detects from device if first session)
+    // 3. Load the correct language
     Localisation.LocalizationManager.Instance.LoadLanguage(
         SaveManager.Instance.Data.languageCode
     );
+
+    // 4. Apply offline earnings now that save data is loaded
+    Economy.ResourceManager.Instance.OnSaveLoaded();
 
     Debug.Log($"[GameManager] All services ready. " +
               $"Developer requests: {_developerRequestCount}");
@@ -128,12 +130,12 @@ namespace KawaiiCandyBox.Core
         return false;
     }
 
-    // TODO: Restore when ResourceManager exists
-    // if (!ResourceManager.Instance.TrySpendCandy(cost))
-    // {
-    //     Debug.Log("[GameManager] Not enough candy for developer request.");
-    //     return false;
-    // }
+    // Restored now that ResourceManager exists
+    if (!Economy.ResourceManager.Instance.TrySpendCandy(cost))
+    {
+        Debug.Log("[GameManager] Not enough candy for developer request.");
+        return false;
+    }
 
     _developerRequestCount++;
     SaveManager.Instance.Data.developerRequestCount = _developerRequestCount;
@@ -143,6 +145,25 @@ namespace KawaiiCandyBox.Core
     OnDeveloperRequestGranted?.Invoke(_developerRequestCount);
 
     return true;
+}
+/// <summary>
+/// Called when the player eats candy. Recalculates max HP
+/// based on the total eaten so far using the original game's formula.
+/// HP is capped at 1000 from candy eating alone.
+/// </summary>
+public void OnCandyEaten(long totalEaten)
+{
+    // Original Candy Box 2 HP formula
+    // Base 100 HP + up to 900 more from eating, capped at 1000 total
+    float newMaxHp = Mathf.Min(100f + (totalEaten / 2673.845f), 1000f);
+
+    SaveManager.Instance.Data.maxHp = newMaxHp;
+
+    // Restore HP to full when eating candy (feels good on mobile)
+    SaveManager.Instance.Data.currentHp = newMaxHp;
+
+    Debug.Log($"[GameManager] Max HP updated to {newMaxHp:F1} " +
+              $"from {totalEaten} total candy eaten.");
 }
 
         /// <summary>
