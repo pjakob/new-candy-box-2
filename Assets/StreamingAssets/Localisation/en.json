@@ -1,0 +1,24 @@
+{
+    "entries": [
+        { "key": "ui.candy_counter.label", "value": "Candies" },
+        { "key": "ui.button.eat_all", "value": "Eat all the candies" },
+        { "key": "ui.button.throw_candies", "value": "Throw 10 candies on the ground" },
+        { "key": "developer.request_button.0", "value": "Request a new feature from the developer (30 candies)" },
+        { "key": "developer.request_button.repeat", "value": "Request another one (5 candies)" },
+        { "key": "developer.request_button.2", "value": "Request once again (5 candies)" },
+        { "key": "developer.request_button.3", "value": "Request for something more exciting (5 candies)" },
+        { "key": "developer.request_button.4", "value": "Final request! This one has to be worth the candies. (10 candies)" },
+        { "key": "developer.response.1", "value": "Here's a status bar for you." },
+        { "key": "developer.response.2", "value": "Here's a configuration menu." },
+        { "key": "developer.response.3", "value": "Here's a save button." },
+        { "key": "developer.response.4", "value": "Here's 100 health points for you. They're going to be useful." },
+        { "key": "developer.response.5", "value": "Here's a map." },
+        { "key": "offline.welcome_back", "value": "Welcome back!" },
+        { "key": "offline.away_message", "value": "You were away for {0}." },
+        { "key": "offline.candy_earned", "value": "You earned {0} candies while you were gone!" },
+        { "key": "offline.cap_reached", "value": "Your candy jar was full! Come back sooner next time 🍬" },
+        { "key": "offline.collect_button", "value": "Collect!" },
+        { "key": "settings.language_label", "value": "Language" },
+        { "key": "settings.save_label", "value": "Save Game" }
+    ]
+}
