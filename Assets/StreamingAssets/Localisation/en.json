@@ -31,6 +31,9 @@
         { "key": "ui.save.save_button", "value": "Save game" },
         { "key": "ui.save.reset_button", "value": "Reset game" },
         { "key": "ui.save.reset_confirm", "value": "Are you sure? This will delete all your progress." },
+        { "key": "ui.resources.candy", "value": "You have {0} candies" },
+        { "key": "ui.resources.lollipops", "value": "-> {0} lollipops" },
+        { "key": "ui.resources.chocolate_bars", "value": "You have {0} chocolate bars" },
         { "key": "settings.save_label", "value": "Save Game" }
     ]
 }

@@ -15,11 +15,15 @@ namespace KawaiiCandyBox.Economy
     /// </summary>
     public class ResourceManager : Core.SingletonManager<ResourceManager>
     {
-        // ── Candy generation ─────────────────────────────────────────
+        // ── Config ───────────────────────────────────────────────────
+        [SerializeField] private EconomyConfig _economyConfig;
 
-        // Base rate before any upgrades. Pulled from EconomyConfig
-        // once that ScriptableObject exists. Hardcoded for now.
+        // ── Candy generation ─────────────────────────────────────────
         private const float BaseCandyPerSecond = 1f;
+        //private const long ChocolateBarThreshold = 1630;
+        private long ChocolateBarThreshold => _economyConfig != null
+        ? _economyConfig.chocolateBarThreshold
+        : 1630L;
 
         // Accumulator for partial candy — we generate in float
         // precision but store whole candies
@@ -33,20 +37,26 @@ namespace KawaiiCandyBox.Economy
         private long _pendingOfflineCandy = 0;
 
         // ── Events ───────────────────────────────────────────────────
-public static event System.Action<long, bool> OnCandyThrown;
-// Parameters: totalCandiesThrown, justEarnedChocolateBar
 
-public static event System.Action OnChocolateBarEarned;
-
-        // Fired whenever candy count changes — UI subscribes to this
+        // Fired whenever candy count changes
         public static event System.Action<long> OnCandyChanged;
 
         // Fired whenever lollipop count changes
         public static event System.Action<long> OnLollipopChanged;
 
+        // Fired whenever chocolate bar count changes
+        public static event System.Action<int> OnChocolateBarChanged;
+
+        // Fired when candy is thrown
+        // Parameters: totalCandiesThrown, justEarnedChocolateBar
+        public static event System.Action<long, bool> OnCandyThrown;
+
+        // Fired when a chocolate bar is earned
+        public static event System.Action OnChocolateBarEarned;
+
         // Fired when offline earnings are ready to be shown
-        public static event System.Action<long, long> OnOfflineEarningsReady;
         // Parameters: candyEarned, secondsElapsed
+        public static event System.Action<long, long> OnOfflineEarningsReady;
 
         // ── Properties ───────────────────────────────────────────────
 
@@ -55,11 +65,24 @@ public static event System.Action OnChocolateBarEarned;
         public long CandyEatenTotal => Core.SaveManager.Instance.Data.candyEatenTotal;
         public float CandyPerSecond => _currentCandyPerSecond;
 
+        public long OfflineCapSeconds => _economyConfig != null
+            ? (long)(_economyConfig.offlineCapHours * 3600f)
+            : 28800L;
+
         // ── Initialisation ───────────────────────────────────────────
 
         protected override void OnInitialise()
         {
-            Debug.Log("[ResourceManager] Initialised.");
+            if (_economyConfig != null)
+            {
+                _currentCandyPerSecond = _economyConfig.baseCandyPerSecond;
+
+                #if UNITY_EDITOR
+                _currentCandyPerSecond *= _economyConfig.debugCpsMultiplier;
+                #endif
+            }
+
+            Debug.Log($"[ResourceManager] Initialised. CPS: {_currentCandyPerSecond}");
         }
 
         /// <summary>
@@ -78,8 +101,6 @@ public static event System.Action OnChocolateBarEarned;
                 Debug.Log($"[ResourceManager] Offline earnings ready: " +
                           $"{candyEarned} candy over {offlineSeconds}s.");
 
-                // Fire event so UI can show the welcome-back screen.
-                // Actual candy is added when player taps Collect.
                 OnOfflineEarningsReady?.Invoke(candyEarned, offlineSeconds);
             }
         }
@@ -161,50 +182,51 @@ public static event System.Action OnChocolateBarEarned;
 
             OnCandyChanged?.Invoke(0);
 
-            // Tell GameManager to recalculate HP based on new eaten total
             Core.GameManager.Instance.OnCandyEaten(
                 Core.SaveManager.Instance.Data.candyEatenTotal
             );
-
+            Core.SaveManager.Instance.SaveGame();
             Debug.Log($"[ResourceManager] Ate {eaten} candy. " +
                       $"Total eaten: {CandyEatenTotal}.");
         }
 
         /// <summary>
-        /// Throws 10 candies on the ground (spends them with no return).
-        /// Returns false if the player doesn't have enough.
+        /// Throws candies on the ground. Awards chocolate bar
+        /// when total thrown crosses the threshold.
+        /// Returns false if the player doesn't have enough candy.
         /// </summary>
-        private const long ChocolateBarThreshold = 1630;
+        public bool ThrowCandy(long amount = 10)
+        {
+            if (!TrySpendCandy(amount))
+            {
+                Debug.Log("[ResourceManager] Not enough candy to throw.");
+                return false;
+            }
 
-public bool ThrowCandy(long amount = 10)
-{
-    if (!TrySpendCandy(amount))
-    {
-        Debug.Log("[ResourceManager] Not enough candy to throw.");
-        return false;
-    }
+            Core.SaveManager.Instance.Data.totalCandiesThrown += amount;
+            long totalThrown = Core.SaveManager.Instance.Data.totalCandiesThrown;
 
-    Core.SaveManager.Instance.Data.totalCandiesThrown += amount;
-    long totalThrown = Core.SaveManager.Instance.Data.totalCandiesThrown;
+            bool justEarnedChocolate =
+                totalThrown >= ChocolateBarThreshold &&
+                totalThrown - amount < ChocolateBarThreshold;
 
-    // Check if this throw crossed the chocolate bar threshold
-    bool justEarnedChocolate =
-        totalThrown >= ChocolateBarThreshold &&
-        totalThrown - amount < ChocolateBarThreshold;
+            if (justEarnedChocolate)
+            {
+                Core.SaveManager.Instance.Data.chocolateBarCount++;
+                Core.SaveManager.Instance.Data.hasSeenChocolateBars = true;
+                Debug.Log("[ResourceManager] Chocolate bar earned!");
+                OnChocolateBarEarned?.Invoke();
+                OnChocolateBarChanged?.Invoke(
+                    Core.SaveManager.Instance.Data.chocolateBarCount);
+            }
 
-    if (justEarnedChocolate)
-    {
-        Core.SaveManager.Instance.Data.chocolateBarCount++;
-        Debug.Log("[ResourceManager] Chocolate bar earned!");
-        OnChocolateBarEarned?.Invoke();
-    }
+            Debug.Log($"[ResourceManager] Threw {amount} candy. " +
+                      $"Total thrown: {totalThrown}.");
 
-    Debug.Log($"[ResourceManager] Threw {amount} candy. " +
-              $"Total thrown: {totalThrown}.");
-
-    OnCandyThrown?.Invoke(totalThrown, justEarnedChocolate);
-    return true;
-}
+            OnCandyThrown?.Invoke(totalThrown, justEarnedChocolate);
+            Core.SaveManager.Instance.SaveGame();
+            return true;
+        }
 
         // ── Public lollipop API ──────────────────────────────────────
 
@@ -253,10 +275,10 @@ public bool ThrowCandy(long amount = 10)
 
         private long CalculateOfflineCandy(long seconds)
         {
-            // TODO: Replace hardcoded 1.0f with EconomyConfig.OfflineRate
-            // once EconomyConfig ScriptableObject exists
-            const float offlineRate = 1.0f;
-            return (long)(_currentCandyPerSecond * offlineRate * seconds);
+            float rate = _economyConfig != null
+                ? _economyConfig.offlineCandyRate
+                : 1f;
+            return (long)(_currentCandyPerSecond * rate * seconds);
         }
     }
 }

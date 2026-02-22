@@ -32,8 +32,10 @@ namespace KawaiiCandyBox.Core
         public string languageCode = "";
         public bool soundEnabled = true;  
         // ── Inventory (early game) ───────────────────────────────────
-public int chocolateBarCount = 0;
-public long totalCandiesThrown = 0;  // tracks throw animation progress
+        public int chocolateBarCount = 0;
+        public long totalCandiesThrown = 0;  // tracks throw animation progress
+        public bool hasSeenLollipops = false;
+        public bool hasSeenChocolateBars = false;
     }
 
     /// <summary>
@@ -191,7 +193,9 @@ public long totalCandiesThrown = 0;  // tracks throw animation progress
 
             // Clamp to offline cap (from EconomyConfig — hardcoded
             // temporarily until EconomyConfig ScriptableObject exists)
-            const long offlineCapSeconds = 8 * 60 * 60;    // 8 hours
+            long offlineCapSeconds = Economy.ResourceManager.Instance != null
+            ? Economy.ResourceManager.Instance.OfflineCapSeconds
+            : 28800L;
             elapsedSeconds = Math.Min(elapsedSeconds, offlineCapSeconds);
 
             if (elapsedSeconds < 60)

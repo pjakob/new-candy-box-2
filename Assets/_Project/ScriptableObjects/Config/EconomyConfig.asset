@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4af3889f9ac495f91e68c13577ed41, type: 3}
+  m_Name: EconomyConfig
+  m_EditorClassIdentifier: Assembly-CSharp::KawaiiCandyBox.Economy.EconomyConfig
+  baseCandyPerSecond: 1
+  offlineCapHours: 8
+  offlineCandyRate: 1
+  developerRequestCosts: 1e000000000000000500000000000000050000000000000005000000000000000a00000000000000
+  chocolateBarThreshold: 10
+  debugCpsMultiplier: 100

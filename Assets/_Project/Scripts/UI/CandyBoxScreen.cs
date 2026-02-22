@@ -26,8 +26,7 @@ namespace KawaiiCandyBox.UI
     /// </summary>
     public class CandyBoxScreen : MonoBehaviour
     {
-        [Header("Candy Counter")]
-        [SerializeField] private TextMeshProUGUI _candyCounterLabel;
+        
         [Header("Messages")]
         [SerializeField] private TextMeshProUGUI _candiesEatenLabel;
         [SerializeField] private TextMeshProUGUI _candiesThrownLabel;
@@ -48,7 +47,7 @@ namespace KawaiiCandyBox.UI
 
         private void OnEnable()
         {
-            ResourceManager.OnCandyChanged += UpdateCandyDisplay;
+            Economy.ResourceManager.OnCandyChanged += OnCandyChanged;
             GameManager.OnDeveloperRequestGranted += OnRequestGranted;
             GameManager.OnGameReady += OnGameReady;
             ResourceManager.OnCandyThrown += OnCandyThrown;
@@ -57,7 +56,7 @@ namespace KawaiiCandyBox.UI
 
         private void OnDisable()
         {
-            ResourceManager.OnCandyChanged -= UpdateCandyDisplay;
+            Economy.ResourceManager.OnCandyChanged -= OnCandyChanged;
             GameManager.OnDeveloperRequestGranted -= OnRequestGranted;
             GameManager.OnGameReady -= OnGameReady;
             ResourceManager.OnCandyThrown -= OnCandyThrown;
@@ -68,7 +67,7 @@ namespace KawaiiCandyBox.UI
 {
     SetButtonLabels();
     RefreshButtonVisibility();
-    UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
+    //UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
     RefreshPersistentLabels();  // ← add this
 }
 
@@ -123,7 +122,7 @@ private void OnChocolateBarEarned()
 private void OnGameReady()
 {
     RefreshButtonVisibility();
-    UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
+    //UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
 }
 
 private void OnRequestGranted(int newRequestCount)
@@ -134,35 +133,9 @@ private void OnRequestGranted(int newRequestCount)
 
 // ── Display updates ──────────────────────────────────────────
 
-private void UpdateCandyDisplay(long candyCount)
+private void OnCandyChanged(long candyCount)
 {
-    if (_candyCounterLabel == null) return;
-
-    // Easter eggs from the original game
-    if (candyCount == 42)
-        _candyCounterLabel.text = "42 \\o/";
-    else if (candyCount == 1337)
-        _candyCounterLabel.text = "leet";
-    else
-        _candyCounterLabel.text = FormatCandyCount(candyCount);
-
-    // Show throw button once player has 10+ candy
-    if (_throwCandyButton != null)
-        _throwCandyButton.gameObject.SetActive(candyCount >= 10);
-
-    // Show developer request button once player has 30+ candy
-    // and not all requests have been granted yet
-    // In UpdateCandyDisplay:
-if (_developerRequestButton != null)
-{
-    int requestCount = Core.GameManager.Instance.DeveloperRequestCount;
-    long cost = GetCurrentRequestCost();
-    bool shouldShow = candyCount >= cost && requestCount < 5;
-    _developerRequestButton.gameObject.SetActive(shouldShow);
-
-    if (shouldShow)
-        UpdateDeveloperRequestButton(requestCount);
-}
+    RefreshButtonVisibility();
 }
 private long GetCurrentRequestCost()
 {

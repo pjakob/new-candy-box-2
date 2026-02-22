@@ -55,8 +55,7 @@ namespace KawaiiCandyBox.Core
             CreateService<SaveManager>("SaveManager");
             CreateService<Content.ContentRegistry>("ContentRegistry");
             CreateService<Localisation.LocalizationManager>("LocalizationManager");
-            CreateService<Economy.ResourceManager>("ResourceManager");
-            // CreateService<UI.MenuBarController>("MenuBarController");  // ← add this
+            // ResourceManager now lives in the scene directly
             CreateService<GameManager>("GameManager");
         }
 
