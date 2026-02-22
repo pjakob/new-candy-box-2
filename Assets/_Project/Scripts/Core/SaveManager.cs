@@ -28,8 +28,9 @@ namespace KawaiiCandyBox.Core
         public float currentHp = 100f;
         public float maxHp = 100f;
 
-        // ── Settings ─────────────────────────────────────────────────
-        public string languageCode = "";        // empty = auto-detect from device
+        // ── Settings ────────────────────────────────────────────────
+        public string languageCode = "";
+        public bool soundEnabled = true;  
         // ── Inventory (early game) ───────────────────────────────────
 public int chocolateBarCount = 0;
 public long totalCandiesThrown = 0;  // tracks throw animation progress

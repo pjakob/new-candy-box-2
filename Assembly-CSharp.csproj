@@ -49,11 +49,17 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.3.8f1/Unity.app/Contents/Resources/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/_Project/Scripts/UI/ConfigPanel.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/DeveloperResponseLabel.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/PersistentUICanvas.cs" />
     <Compile Include="Assets/_Project/Scripts/Economy/ResourceManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/MenuBarController.cs" />
     <Compile Include="Assets/_Project/Scripts/Localisation/LocalizationManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/MenuTab.cs" />
     <Compile Include="Assets/_Project/Scripts/Core/GameManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Core/Bootstrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Content/IIdentifiable.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/SavePanel.cs" />
     <Compile Include="Assets/_Project/Scripts/Content/ContentRegistry.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/CandyBoxScreen.cs" />
     <Compile Include="Assets/_Project/Scripts/Core/SaveManager.cs" />

@@ -51,15 +51,14 @@ namespace KawaiiCandyBox.Core
         /// after the Bootstrap scene is replaced by MainMenu.
         /// </summary>
         private void CreateServices()
-{
-    CreateService<SaveManager>("SaveManager");
-    CreateService<Content.ContentRegistry>("ContentRegistry");
-    CreateService<Localisation.LocalizationManager>("LocalizationManager");
-    CreateService<Economy.ResourceManager>("ResourceManager");
-    CreateService<GameManager>("GameManager");
-
-    Debug.Log("[Bootstrap] All services created.");
-}
+        {
+            CreateService<SaveManager>("SaveManager");
+            CreateService<Content.ContentRegistry>("ContentRegistry");
+            CreateService<Localisation.LocalizationManager>("LocalizationManager");
+            CreateService<Economy.ResourceManager>("ResourceManager");
+            // CreateService<UI.MenuBarController>("MenuBarController");  // ← add this
+            CreateService<GameManager>("GameManager");
+        }
 
         /// <summary>
         /// Creates a new GameObject with the given name and attaches

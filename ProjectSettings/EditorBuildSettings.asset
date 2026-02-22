@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Core/MainMenu.unity
     guid: 0806368d4591a41d1a696f6f76996e6c
+  - enabled: 1
+    path: Assets/_Project/Scenes/Core/WorldMap.unity
+    guid: 74d3c33c5ab6a4a47a69c23c64a6596d
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

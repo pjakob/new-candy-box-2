@@ -120,21 +120,21 @@ private void OnChocolateBarEarned()
 {
     // Handled inside OnCandyThrown above
 }
-        private void OnGameReady()
-        {
-            RefreshButtonVisibility();
-            UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
-        }
+private void OnGameReady()
+{
+    RefreshButtonVisibility();
+    UpdateCandyDisplay(ResourceManager.Instance.CandyCount);
+}
 
-        private void OnRequestGranted(int newRequestCount)
-        {
-            RefreshButtonVisibility();
-            UpdateDeveloperRequestButton(newRequestCount);
-        }
+private void OnRequestGranted(int newRequestCount)
+{
+    RefreshButtonVisibility();
+    UpdateDeveloperRequestButton(newRequestCount);
+}
 
-        // ── Display updates ──────────────────────────────────────────
+// ── Display updates ──────────────────────────────────────────
 
-        private void UpdateCandyDisplay(long candyCount)
+private void UpdateCandyDisplay(long candyCount)
 {
     if (_candyCounterLabel == null) return;
 
@@ -152,17 +152,24 @@ private void OnChocolateBarEarned()
 
     // Show developer request button once player has 30+ candy
     // and not all requests have been granted yet
-    if (_developerRequestButton != null)
-    {
-        int requestCount = GameManager.Instance.DeveloperRequestCount;
-        bool shouldShow = candyCount >= 30 && requestCount < 5;
-        _developerRequestButton.gameObject.SetActive(shouldShow);
+    // In UpdateCandyDisplay:
+if (_developerRequestButton != null)
+{
+    int requestCount = Core.GameManager.Instance.DeveloperRequestCount;
+    long cost = GetCurrentRequestCost();
+    bool shouldShow = candyCount >= cost && requestCount < 5;
+    _developerRequestButton.gameObject.SetActive(shouldShow);
 
-        if (shouldShow)
-            UpdateDeveloperRequestButton(requestCount);
-    }
+    if (shouldShow)
+        UpdateDeveloperRequestButton(requestCount);
 }
-
+}
+private long GetCurrentRequestCost()
+{
+    int count = Core.GameManager.Instance.DeveloperRequestCount;
+    if (count >= RequestCosts.Length) return long.MaxValue;
+    return RequestCosts[count];
+}
 private void RefreshButtonVisibility()
 {
     int requestCount = GameManager.Instance.DeveloperRequestCount;
@@ -178,13 +185,14 @@ private void RefreshButtonVisibility()
 
     // Developer request button needs 30+ candy and requests remaining
     if (_developerRequestButton != null)
-    {
-        bool shouldShow = candyCount >= 30 && requestCount < 5;
-        _developerRequestButton.gameObject.SetActive(shouldShow);
+{
+    long cost = GetCurrentRequestCost();
+    bool shouldShow = candyCount >= cost && requestCount < 5;
+    _developerRequestButton.gameObject.SetActive(shouldShow);
 
-        if (shouldShow)
-            UpdateDeveloperRequestButton(requestCount);
-    }
+    if (shouldShow)
+        UpdateDeveloperRequestButton(requestCount);
+}
 }
 
         private void UpdateDeveloperRequestButton(int currentRequestCount)
