@@ -61,6 +61,7 @@
     <Compile Include="Assets/_Project/Scripts/Content/IIdentifiable.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/SavePanel.cs" />
     <Compile Include="Assets/_Project/Scripts/Content/ContentRegistry.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/HealthBarController.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/CandyBoxScreen.cs" />
     <Compile Include="Assets/_Project/Scripts/Core/SaveManager.cs" />
   </ItemGroup>

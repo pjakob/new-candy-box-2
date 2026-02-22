@@ -77,6 +77,8 @@ namespace KawaiiCandyBox.Core
         // Events other systems listen to when progression state changes
         public static event System.Action<int> OnDeveloperRequestGranted;
         public static event System.Action OnGameReady;
+        public static event System.Action<float, float> OnHealthChanged;
+// Parameters: currentHp, maxHp
 
         public int DeveloperRequestCount => _developerRequestCount;
 
@@ -153,17 +155,24 @@ namespace KawaiiCandyBox.Core
 /// </summary>
 public void OnCandyEaten(long totalEaten)
 {
-    // Original Candy Box 2 HP formula
-    // Base 100 HP + up to 900 more from eating, capped at 1000 total
-    float newMaxHp = Mathf.Min(100f + (totalEaten / 2673.845f), 1000f);
+    // Source-verified HP formula (dual exponential curve)
+    // First term: fast early growth up to ~100 bonus HP
+    // Second term: slow late growth up to ~800 bonus HP
+    // Base 100 + max 900 = 1000 HP cap before equipment modifiers
+    float term1 = Mathf.Ceil((1f - Mathf.Exp(-totalEaten / 3000f)) * 100f);
+    float term2 = Mathf.Ceil((1f - Mathf.Exp(-totalEaten / 400000f)) * 800f);
+    float newMaxHp = 100f + term1 + term2;
 
-    SaveManager.Instance.Data.maxHp = newMaxHp;
+    Core.SaveManager.Instance.Data.maxHp = newMaxHp;
+    Core.SaveManager.Instance.Data.currentHp = newMaxHp;
 
-    // Restore HP to full when eating candy (feels good on mobile)
-    SaveManager.Instance.Data.currentHp = newMaxHp;
-
-    Debug.Log($"[GameManager] Max HP updated to {newMaxHp:F1} " +
+    Debug.Log($"[GameManager] Max HP updated to {newMaxHp:F0} " +
               $"from {totalEaten} total candy eaten.");
+
+    OnHealthChanged?.Invoke(
+        Core.SaveManager.Instance.Data.currentHp,
+        Core.SaveManager.Instance.Data.maxHp
+    );
 }
 
         /// <summary>
