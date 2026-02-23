@@ -31,6 +31,7 @@ namespace KawaiiCandyBox.Core
         // ── Settings ────────────────────────────────────────────────
         public string languageCode = "";
         public bool soundEnabled = true;  
+        public float musicVolume = 1f; // default full volume
         // ── Inventory (early game) ───────────────────────────────────
         public int chocolateBarCount = 0;
         public long totalCandiesThrown = 0;  // tracks throw animation progress
@@ -160,19 +161,16 @@ namespace KawaiiCandyBox.Core
         /// </summary>
         public void DeleteSave()
         {
-            try
+            if (System.IO.File.Exists(_savePath))
             {
-                if (File.Exists(_savePath))
-                    File.Delete(_savePath);
+                System.IO.File.Delete(_savePath);
+                Debug.Log("[SaveManager] Save file deleted.");
+            }
 
-                Data = new SaveData();
-                Debug.Log("[SaveManager] Save deleted.");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[SaveManager] Delete failed: {e.Message}");
-            }
-        }
+            // Reset in-memory data so the fresh Bootstrap load
+            // starts with clean defaults, not the old session values
+            Data = new SaveData();
+        }   
 
         // ── Offline progression ──────────────────────────────────────
 

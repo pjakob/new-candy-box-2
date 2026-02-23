@@ -20,7 +20,7 @@ namespace KawaiiCandyBox.UI
     {
         [Header("Containers")]
         [SerializeField] private GameObject _tabContainer;
-        [SerializeField] private GameObject _panelContainer;
+
 
         [Header("Tab Buttons")]
         [SerializeField] private Button _homeTabButton;
@@ -87,8 +87,8 @@ namespace KawaiiCandyBox.UI
         {
             if (_tabContainer != null)
                 _tabContainer.SetActive(false);
-            if (_panelContainer != null)
-                _panelContainer.SetActive(false);
+            //if (_panelContainer != null)
+            //    _panelContainer.SetActive(false);
         }
 
         // ── Event handlers ───────────────────────────────────────────
@@ -101,7 +101,7 @@ namespace KawaiiCandyBox.UI
             if (Core.GameManager.Instance.HasMenuBar)
             {
                 if (_tabContainer != null) _tabContainer.SetActive(true);
-                if (_panelContainer != null) _panelContainer.SetActive(true);
+                //if (_panelContainer != null) _panelContainer.SetActive(true);
             }
         }
 
@@ -112,7 +112,7 @@ namespace KawaiiCandyBox.UI
             if (newRequestCount == 1)
             {
                 if (_tabContainer != null) _tabContainer.SetActive(true);
-                if (_panelContainer != null) _panelContainer.SetActive(true);
+                //if (_panelContainer != null) _panelContainer.SetActive(true);
                 Debug.Log("[MenuBarController] Menu bar revealed.");
             }
 

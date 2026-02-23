@@ -16,5 +16,5 @@ MonoBehaviour:
   offlineCapHours: 8
   offlineCandyRate: 1
   developerRequestCosts: 1e000000000000000500000000000000050000000000000005000000000000000a00000000000000
-  chocolateBarThreshold: 10
-  debugCpsMultiplier: 100
+  chocolateBarThreshold: 50
+  debugCpsMultiplier: 20

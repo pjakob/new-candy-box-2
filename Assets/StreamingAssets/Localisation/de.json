@@ -1,0 +1,55 @@
+{
+    "entries": [
+        { "key": "ui.candy_counter.label", "value": "Bonbons" },
+        { "key": "ui.button.eat_all", "value": "Alle Bonbons essen" },
+        { "key": "ui.button.throw_candies", "value": "10 Bonbons auf den Boden werfen" },
+
+        { "key": "developer.request_button.0", "value": "Eine neue Funktion vom Entwickler anfordern (30 Bonbons)" },
+        { "key": "developer.request_button.1", "value": "Noch eine anfordern (5 Bonbons)" },
+        { "key": "developer.request_button.2", "value": "Noch einmal anfordern (5 Bonbons)" },
+        { "key": "developer.request_button.3", "value": "Etwas Spannenderes anfordern (5 Bonbons)" },
+        { "key": "developer.request_button.4", "value": "Letzte Anfrage! Hoffentlich ist sie die Bonbons wert. (10 Bonbons)" },
+
+        { "key": "developer.response.0", "value": "Hier ist eine Statusleiste für dich." },
+        { "key": "developer.response.1", "value": "Hier ist ein Einstellungsmenü." },
+        { "key": "developer.response.2", "value": "Hier ist ein Speicherbutton." },
+        { "key": "developer.response.3", "value": "Hier sind 100 Lebenspunkte für dich. Du wirst sie brauchen." },
+        { "key": "developer.response.4", "value": "Hier ist eine Karte." },
+
+        { "key": "offline.welcome_back", "value": "Willkommen zurück!" },
+        { "key": "offline.away_message", "value": "Du warst {0} lang weg." },
+        { "key": "offline.candy_earned", "value": "Du hast {0} Bonbons verdient, während du weg warst!" },
+        { "key": "offline.cap_reached", "value": "Dein Bonbonglas war voll! Komm nächstes Mal früher zurück 🍬" },
+        { "key": "offline.collect_button", "value": "Einsammeln!" },
+
+        { "key": "settings.language_label", "value": "Sprache" },
+
+        { "key": "ui.eat.message", "value": "Du hast bisher {0} Bonbons gegessen." },
+        { "key": "ui.throw.message", "value": "Du hast bisher {0} Bonbons auf den Boden geworfen." },
+        { "key": "ui.throw.chocolate_bar_earned", "value": "Du hast genug Bonbons geworfen und eine Tafel Schokolade gefunden! 🍫" },
+
+        { "key": "ui.menu.tab.home", "value": "DIE BONBONBOX" },
+        { "key": "ui.menu.tab.config", "value": "CFG" },
+        { "key": "ui.menu.tab.save", "value": "SPEICHERN" },
+        { "key": "ui.menu.tab.map", "value": "KARTE" },
+
+        { "key": "ui.config.title", "value": "Einstellungen" },
+        { "key": "ui.config.language", "value": "Sprache" },
+        { "key": "ui.config.music", "value": "Musiklautstärke" },
+
+        { "key": "ui.config.about.title", "value": "Über" },
+        { "key": "ui.config.about.text", "value": "Kawaii Candy Box ist ein Remake von Candy Box 2 von aniwey.\nEntwickelt von Catumet Games.\nVersion 0.1" },
+
+        { "key": "ui.save.save_button", "value": "Spiel speichern" },
+        { "key": "ui.save.reset_button", "value": "Spiel zurücksetzen" },
+        { "key": "ui.save.reset_confirm", "value": "Bist du sicher? Dein gesamter Fortschritt wird gelöscht!" },
+        { "key": "ui.save.confirm_yes", "value": "Ja, alles zurücksetzen" },
+        { "key": "ui.save.confirm_no", "value": "Abbrechen" },
+
+        { "key": "ui.resources.candy", "value": "Du hast {0} Bonbons" },
+        { "key": "ui.resources.lollipops", "value": "-> {0} Lutscher" },
+        { "key": "ui.resources.chocolate_bars", "value": "Du hast {0} Tafeln Schokolade" },
+
+        { "key": "settings.save_label", "value": "Spiel speichern" }
+    ]
+}

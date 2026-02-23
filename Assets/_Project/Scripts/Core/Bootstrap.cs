@@ -57,6 +57,7 @@ namespace KawaiiCandyBox.Core
             CreateService<Localisation.LocalizationManager>("LocalizationManager");
             // ResourceManager now lives in the scene directly
             CreateService<GameManager>("GameManager");
+            CreateService<AudioManager>("AudioManager");
         }
 
         /// <summary>

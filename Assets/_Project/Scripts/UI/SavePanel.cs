@@ -1,82 +1,107 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace KawaiiCandyBox.UI
 {
     /// <summary>
-    /// The save panel — opened via the SAVE tab.
-    /// Allows manual save and game reset.
-    /// Note: autosave always runs regardless of this panel.
+    /// The Save panel opened via the SAVE tab in the menu bar.
+    /// Provides game reset with an inline confirmation step.
+    ///
+    /// Scene hierarchy expected:
+    ///   SavePanel (this script, inside PanelContainer)
+    ///     ├── ResetButton        (Button + TMP Text)
+    ///     └── ConfirmGroup       (GameObject, inactive by default)
+    ///           ├── ConfirmLabel (TMP Text)
+    ///           ├── ConfirmButton (Button + TMP Text)
+    ///           └── CancelButton  (Button + TMP Text)
     /// </summary>
     public class SavePanel : MonoBehaviour
     {
-        [Header("Buttons")]
-        [SerializeField] private Button _saveButton;
-        [SerializeField] private TextMeshProUGUI _saveButtonLabel;
-
+        [Header("Reset Button")]
         [SerializeField] private Button _resetButton;
-        [SerializeField] private TextMeshProUGUI _resetButtonLabel;
+        [SerializeField] private TextMeshProUGUI _resetButtonText;
 
-        [Header("Confirmation")]
-        [SerializeField] private GameObject _resetConfirmationGroup;
-        [SerializeField] private TextMeshProUGUI _resetConfirmationLabel;
-        [SerializeField] private Button _confirmResetButton;
-        [SerializeField] private Button _cancelResetButton;
-
-        [Header("Close")]
-        [SerializeField] private Button _closeButton;
+        [Header("Confirmation Group")]
+        [SerializeField] private GameObject _confirmGroup;
+        [SerializeField] private TextMeshProUGUI _confirmLabel;
+        [SerializeField] private Button _confirmButton;
+        [SerializeField] private TextMeshProUGUI _confirmButtonText;
+        [SerializeField] private Button _cancelButton;
+        [SerializeField] private TextMeshProUGUI _cancelButtonText;
 
         private void OnEnable()
         {
-            RefreshLabels();
-
-            // Always hide confirmation on open
-            if (_resetConfirmationGroup != null)
-                _resetConfirmationGroup.SetActive(false);
+            // Always start in default state when panel opens
+            SetLabels();
+            ShowDefaultState();
         }
 
-        private void RefreshLabels()
+        private void SetLabels()
         {
             var loc = Localisation.LocalizationManager.Instance;
-            if (_saveButtonLabel != null)
-                _saveButtonLabel.text = loc.Get("ui.save.save_button");
-            if (_resetButtonLabel != null)
-                _resetButtonLabel.text = loc.Get("ui.save.reset_button");
-            if (_resetConfirmationLabel != null)
-                _resetConfirmationLabel.text = loc.Get("ui.save.reset_confirm");
+            if (loc == null) return;
+
+            SetLabel(_resetButtonText,   "ui.save.reset_button");
+            SetLabel(_confirmLabel,      "ui.save.reset_confirm");
+            SetLabel(_confirmButtonText, "ui.save.confirm_yes");
+            SetLabel(_cancelButtonText,  "ui.save.confirm_no");
         }
 
-        public void OnSavePressed()
+        private void SetLabel(TextMeshProUGUI label, string key)
         {
-            Core.SaveManager.Instance.SaveGame();
-            Debug.Log("[SavePanel] Manual save triggered.");
+            if (label != null)
+                label.text = Localisation.LocalizationManager.Instance.Get(key);
         }
+
+        // ── Button handlers ──────────────────────────────────────────
 
         public void OnResetPressed()
         {
-            // Show confirmation before doing anything destructive
-            if (_resetConfirmationGroup != null)
-                _resetConfirmationGroup.SetActive(true);
+            ShowConfirmState();
         }
 
         public void OnConfirmResetPressed()
-        {
-            Core.SaveManager.Instance.DeleteSave();
+{
+    Debug.Log("[SavePanel] Game reset confirmed.");
+    Core.SaveManager.Instance.DeleteSave();
+    
+    // Destroy all DontDestroyOnLoad objects so Bootstrap
+    // starts completely fresh
+    GameObject.Destroy(Core.SaveManager.Instance.gameObject);
+    GameObject.Destroy(Core.GameManager.Instance.gameObject);
+    GameObject.Destroy(Economy.ResourceManager.Instance.gameObject);
+    GameObject.Destroy(Content.ContentRegistry.Instance.gameObject);
+    GameObject.Destroy(Localisation.LocalizationManager.Instance.gameObject);
+    
+    // Destroy PersistentUI (contains MenuBar, HealthBar, panels etc.)
+    GameObject.Destroy(transform.root.gameObject);
+    
+    SceneManager.LoadScene("Bootstrap");
+}
 
-            // Reload the game from scratch
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Bootstrap");
+        public void OnCancelPressed()
+        {
+            ShowDefaultState();
         }
 
-        public void OnCancelResetPressed()
+        // ── State helpers ────────────────────────────────────────────
+
+        private void ShowDefaultState()
         {
-            if (_resetConfirmationGroup != null)
-                _resetConfirmationGroup.SetActive(false);
+            if (_resetButton != null)
+                _resetButton.gameObject.SetActive(true);
+            if (_confirmGroup != null)
+                _confirmGroup.SetActive(false);
         }
 
-        public void OnClosePressed()
+        private void ShowConfirmState()
         {
-            MenuBarController.Instance.CloseActivePanel();
+            if (_resetButton != null)
+                _resetButton.gameObject.SetActive(false);
+            if (_confirmGroup != null)
+                _confirmGroup.SetActive(true);
         }
     }
 }

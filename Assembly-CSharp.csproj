@@ -56,11 +56,13 @@
     <Compile Include="Assets/_Project/Scripts/UI/PersistentUICanvas.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/MenuBarController.cs" />
     <Compile Include="Assets/_Project/Scripts/Economy/ResourceManager.cs" />
+    <Compile Include="Assets/_Project/Scripts/Core/AudioManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Localisation/LocalizationManager.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/MenuTab.cs" />
     <Compile Include="Assets/_Project/Scripts/Core/GameManager.cs" />
     <Compile Include="Assets/_Project/Scripts/Core/Bootstrap.cs" />
     <Compile Include="Assets/_Project/Scripts/Content/IIdentifiable.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/BlockRaycast.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/SavePanel.cs" />
     <Compile Include="Assets/_Project/Scripts/Content/ContentRegistry.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/HealthBarController.cs" />

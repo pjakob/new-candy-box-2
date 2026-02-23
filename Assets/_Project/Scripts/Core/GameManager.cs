@@ -99,26 +99,27 @@ namespace KawaiiCandyBox.Core
         /// Called by Bootstrap once all other services are ready.
         /// </summary>
         public void OnAllServicesReady()
-{
-    // 1. Load save data first — everything else depends on it
-    SaveManager.Instance.LoadGame();
+        {
+         // 1. Load save data first — everything else depends on it
+            SaveManager.Instance.LoadGame();
 
-    // 2. Restore our local state from save data
-    _developerRequestCount = SaveManager.Instance.Data.developerRequestCount;
+            // 2. Restore our local state from save data
+            _developerRequestCount = SaveManager.Instance.Data.developerRequestCount;
 
-    // 3. Load the correct language
-    Localisation.LocalizationManager.Instance.LoadLanguage(
-        SaveManager.Instance.Data.languageCode
-    );
+            // 3. Load the correct language
+            Localisation.LocalizationManager.Instance.LoadLanguage(
+            SaveManager.Instance.Data.languageCode
+            );
 
-    // 4. Apply offline earnings now that save data is loaded
-    Economy.ResourceManager.Instance.OnSaveLoaded();
+            // 4. Apply offline earnings now that save data is loaded
+            Economy.ResourceManager.Instance.OnSaveLoaded();
 
-    Debug.Log($"[GameManager] All services ready. " +
+            Debug.Log($"[GameManager] All services ready. " +
               $"Developer requests: {_developerRequestCount}");
 
-    OnGameReady?.Invoke();
-}
+            OnGameReady?.Invoke();
+            AudioManager.Instance.StartMusic();
+        }
 
         /// <summary>
         /// Attempt to spend candies on a developer request.
