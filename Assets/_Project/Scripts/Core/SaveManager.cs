@@ -37,6 +37,9 @@ namespace KawaiiCandyBox.Core
         public long totalCandiesThrown = 0;  // tracks throw animation progress
         public bool hasSeenLollipops = false;
         public bool hasSeenChocolateBars = false;
+
+        public int painsAuChocolatCount = 0;
+        public bool hasSeenPainsAuChocolat = false;
     }
 
     /// <summary>

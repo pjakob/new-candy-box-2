@@ -36,9 +36,10 @@
         { "key": "ui.save.reset_confirm", "value": "Are you sure? This will delete all your progress!" },
         { "key": "ui.save.confirm_yes", "value": "Yes, reset everything" },
         { "key": "ui.save.confirm_no", "value": "Cancel" },
-        { "key": "ui.resources.candy", "value": "You have {0} candies" },
-        { "key": "ui.resources.lollipops", "value": "-> {0} lollipops" },
-        { "key": "ui.resources.chocolate_bars", "value": "You have {0} chocolate bars" },
+        { "key": "ui.resources.candy", "value": "{0} candies" },
+        { "key": "ui.resources.lollipops", "value": "{0} lollipops" },
+        { "key": "ui.resources.chocolate_bars", "value": "{0} chocolate bars" },
+        { "key": "ui.resources.pains", "value": "{0} pains au chocolat" },
         { "key": "settings.save_label", "value": "Save Game" }
     ]
 }

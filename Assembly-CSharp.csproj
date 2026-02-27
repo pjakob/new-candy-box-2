@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Economy/EconomyConfig.cs" />
+    <Compile Include="Assets/_Project/Scripts/UI/SafeAreaController.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/ConfigPanel.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/DeveloperResponseLabel.cs" />
     <Compile Include="Assets/_Project/Scripts/UI/ResourceDisplayController.cs" />
