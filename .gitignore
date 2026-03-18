@@ -15,3 +15,12 @@ obj/
 .vscode/
 
 
+
+# Unity Build Output
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+*_BurstDebugInformation_DoNotShip/
+
+# Unity auto-generated
+*.csproj
+*.sln
+*.slnx
