@@ -2312,7 +2312,7 @@ MonoBehaviour:
   _savePanel: {fileID: 2085500835}
   _menuBarHeight: 70
   _healthBarHeight: 40
-  _mapSceneName: WorldMap
+  _mapSceneName: VillageMap
   _mainMenuSceneName: MainMenu
 --- !u!114 &671028058
 MonoBehaviour:
